@@ -61,6 +61,6 @@ export interface Recibo {
   referente: string;
   duasVias: boolean;
   dataCriacao: string;
-  template?: "docente" | "coordenador_secretario";
+  template?: "docente" | "coordenador_secretario" | "tesouraria";
   disciplina?: string;
 }

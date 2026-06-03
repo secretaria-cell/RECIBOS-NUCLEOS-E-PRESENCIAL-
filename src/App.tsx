@@ -213,6 +213,135 @@ export default function App() {
       );
     }
 
+    if (rcb.template === "tesouraria") {
+      return (
+        <div className="space-y-3.5 text-black font-sans text-left">
+          {/* Centered Logo & Brand with a distinctive background banner */}
+          <div className="flex items-center justify-between border-b border-gray-350 pb-1.5">
+            <div className="flex items-center space-x-3">
+              <img 
+                src={schoolSettings.logoUrl || defaultSchoolLogo} 
+                alt="ESTEADEB" 
+                className="w-12 h-12 object-contain"
+                referrerPolicy="no-referrer"
+              />
+              <div>
+                <h2 className="text-sm font-bold tracking-tight uppercase text-neutral-900 leading-tight">
+                  {schoolSettings.nome}
+                </h2>
+                <div className="text-[8px] font-sans text-stone-500 font-semibold uppercase tracking-wider">
+                  TESOURARIA CENTRAL &amp; CONTABILIDADE
+                </div>
+                <div className="text-[8px] font-bold text-gray-500">CNPJ: {schoolSettings.cnpj}</div>
+              </div>
+            </div>
+            
+            <div className="text-right font-sans text-xs shrink-0">
+              <div className="font-bold text-stone-900 block bg-amber-50 border border-amber-300/60 px-2 py-0.5 rounded text-[10px]">
+                Núcleo: {rcb.nomeNucleo}
+              </div>
+              <div className="text-[8px] text-gray-500 mt-0.5">Curso: {rcb.cursoNucleo}</div>
+            </div>
+          </div>
+
+          <div className="text-center py-1 bg-neutral-900 text-white rounded font-sans tracking-widest text-[11px] font-bold uppercase">
+            RECIBO DE TESOURARIA / CAIXA
+          </div>
+
+          {/* Amount details banner style */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="md:col-span-1 bg-gray-50 p-2 rounded border border-gray-350 flex flex-col justify-center">
+              <span className="text-[8px] uppercase tracking-wider text-gray-500 block font-bold">Valor do Recibo</span>
+              <span className="font-extrabold text-sm text-stone-900">
+                {rcb.valor > 0 ? formatCurrency(rcb.valor) : "R$ ____________"}
+              </span>
+            </div>
+
+            <div className="md:col-span-2 bg-gray-50 p-2 rounded border border-gray-350">
+              <span className="text-[8px] uppercase tracking-wider text-gray-400 block font-bold">Importância por Extenso</span>
+              <span className="text-[10px] text-stone-850 font-medium italic block leading-relaxed pt-0.5">
+                ( {rcb.valorExtenso || "____________________________________________________________"} )
+              </span>
+            </div>
+          </div>
+
+          {/* Description text */}
+          <div className="leading-relaxed text-stone-900 text-justify text-xs space-y-1.5 pt-1">
+            <p className="leading-relaxed text-justify">
+              Recebemos do(a) favorecido(a) <strong>{rcb.nomeProfessor}</strong>, inscrito no CPF sob o nº <strong>{rcb.cpfProfessor || "___.___.___-__"}</strong> e residente no endereço <strong>{rcb.enderecoProfessor || "Não informado"}</strong>, a importância descrita neste comprovante, correspondente a: <span className="underline font-bold text-neutral-900">{rcb.referente}</span>.
+            </p>
+          </div>
+
+          {/* Payment Method checkboxes & Discipline */}
+          <div className="border border-gray-200 rounded p-2 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div>
+              <span className="text-[8px] uppercase tracking-wider text-gray-400 block font-bold mb-1">Forma de Pagamento</span>
+              <div className="flex flex-wrap gap-3 text-[10px] text-stone-850 font-medium">
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" readOnly checked={rcb.valor > 0} className="w-3.5 h-3.5 accent-neutral-900" />
+                  <span>PIX / Transf.</span>
+                </label>
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="w-3.5 h-3.5" />
+                  <span>Dinheiro</span>
+                </label>
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="w-3.5 h-3.5" />
+                  <span>Cheque / Outros</span>
+                </label>
+              </div>
+            </div>
+
+            {rcb.disciplina ? (
+              <div className="text-right text-[10.5px]">
+                <span className="text-[7.5px] uppercase tracking-wider text-stone-400 block font-bold leading-none mb-0.5">Disciplina Relacionada</span>
+                <span className="font-bold text-amber-900 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded text-[9.5px] inline-block">{rcb.disciplina}</span>
+              </div>
+            ) : (
+              <div className="text-right text-[10.5px]">
+                <span className="text-[7.5px] uppercase tracking-wider text-stone-400 block font-bold leading-none mb-0.5">Disciplina / Matéria</span>
+                <span className="text-gray-400 italic text-[9.5px]">[Não atribuída]</span>
+              </div>
+            )}
+          </div>
+
+          {/* Date row */}
+          <div className="pt-0.5 text-right font-sans text-xs">
+            <span>Data: </span> 
+            <strong className="underline">
+              {new Date(rcb.data + "T12:00:00").toLocaleDateString('pt-BR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              })}
+            </strong>
+          </div>
+
+          {/* Two-Column Signatures signature Box */}
+          <div className="grid grid-cols-2 gap-4 text-center items-end pt-3 font-sans">
+            <div className="p-2 border border-dashed border-gray-300 rounded bg-stone-50/50">
+              <div className="h-4"></div>
+              <div className="border-t border-gray-400 pt-0.5 text-[8px] text-gray-500 font-bold uppercase tracking-wider">
+                Visto do Tesoureiro / Caixa
+              </div>
+            </div>
+            <div className="p-2 border border-dashed border-gray-300 rounded bg-stone-50/50">
+              <div className="h-4"></div>
+              <div className="border-t border-gray-400 pt-0.5 text-[8px] text-gray-500 font-bold uppercase tracking-wider font-sans">
+                Assinatura do Recebedor / Professor
+              </div>
+            </div>
+          </div>
+
+          {/* Footer small text */}
+          <div className="pt-2 border-t border-gray-200 text-center font-sans text-[8px] text-gray-550 leading-normal">
+            <div>{schoolSettings.nome}</div>
+            <div>{schoolSettings.endereco} | Fone: {schoolSettings.telefone} | {schoolSettings.email}</div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-3 text-black">
         {/* Logo and Header info */}
@@ -379,7 +508,7 @@ export default function App() {
   const [receiptValueExtenso, setReceiptValueExtenso] = useState<string>("");
   const [receiptReferente, setReceiptReferente] = useState<string>("");
   const [printLayoutConfig, setPrintLayoutConfig] = useState<"1_via" | "2_vias">("2_vias");
-  const [receiptTemplate, setReceiptTemplate] = useState<"docente" | "coordenador_secretario">("docente");
+  const [receiptTemplate, setReceiptTemplate] = useState<"docente" | "coordenador_secretario" | "tesouraria">("docente");
   const [receiptDisciplina, setReceiptDisciplina] = useState<string>("");
 
   // Selection auto-fills
@@ -390,6 +519,8 @@ export default function App() {
     if (teacher && nucleus) {
       if (receiptTemplate === "coordenador_secretario") {
         setReceiptReferente("comissão de secretário no núcleo supracitado.");
+      } else if (receiptTemplate === "tesouraria") {
+        setReceiptReferente("reembolso de despesas, apoio logístico e atendimento administrativo de Tesouraria.");
       } else {
         // Dynamic standard text
         const cleanCurso = nucleus.curso || "[CURSO]";
@@ -403,6 +534,8 @@ export default function App() {
     } else if (teacher) {
       if (receiptTemplate === "coordenador_secretario") {
         setReceiptReferente("comissão de secretário no núcleo supracitado.");
+      } else if (receiptTemplate === "tesouraria") {
+        setReceiptReferente("reembolso de despesas, apoio logístico e atendimento administrativo de Tesouraria.");
       } else {
         setReceiptReferente(`serviços educacionais prestados à ESTEADEB.`);
       }
@@ -878,8 +1011,8 @@ export default function App() {
       triggerNotification("Por favor, selecione um Núcleo", "error");
       return;
     }
-    const isCoordenador = receiptTemplate === "coordenador_secretario";
-    if (!isCoordenador) {
+    const canBeBlank = receiptTemplate === "coordenador_secretario" || receiptTemplate === "tesouraria";
+    if (!canBeBlank) {
       if (!receiptValueInput || Number(receiptValueInput.replace(",", ".")) <= 0) {
         triggerNotification("Informe um Valor de pagamento válido", "error");
         return;
@@ -896,8 +1029,8 @@ export default function App() {
 
     const teacher = teachers.find(t => t.id === selectedTeacherId)!;
     const nucleus = nuclei.find(n => n.id === selectedNucleusId)!;
-    const valorNum = (isCoordenador || !receiptValueInput) ? 0 : Number(receiptValueInput.replace(",", "."));
-    const valorExtensoStr = isCoordenador ? "" : receiptValueExtenso;
+    const valorNum = (!receiptValueInput) ? 0 : Number(receiptValueInput.replace(",", "."));
+    const valorExtensoStr = (receiptTemplate === "coordenador_secretario" || !receiptValueInput) ? "" : receiptValueExtenso;
 
     const newRecibo: Recibo = {
       id: `rec_${Date.now()}`,
@@ -2333,7 +2466,7 @@ export default function App() {
                   {/* Model/Template template switcher */}
                   <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                     <label className="text-xs font-bold text-admin-navy block mb-2">Modelo de Recibo / Layout Institucional</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                       <button
                         type="button"
                         onClick={() => setReceiptTemplate("docente")}
@@ -2360,6 +2493,21 @@ export default function App() {
                           Coordenador / Secretário <span className="bg-amber-100 text-amber-800 text-[9px] px-1 rounded uppercase font-bold">Modelo Oficial</span>
                         </span>
                         <span className="text-[10px] text-slate-500 mt-0.5 font-medium leading-tight">Layout centrado baseado no modelo enviado. Perfeito para comissões e secretarias.</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setReceiptTemplate("tesouraria")}
+                        className={`flex flex-col items-start p-3 rounded-lg border text-left transition cursor-pointer ${
+                          receiptTemplate === "tesouraria"
+                            ? "bg-emerald-50 border-emerald-400 ring-1 ring-emerald-405"
+                            : "bg-white border-slate-200 hover:bg-slate-100"
+                        }`}
+                      >
+                        <span className="text-xs font-bold text-slate-900 block flex items-center gap-1">
+                          Tesouraria / Caixa <span className="bg-emerald-100 text-emerald-800 text-[9px] px-1 rounded uppercase font-bold">Novo</span>
+                        </span>
+                        <span className="text-[10px] text-slate-500 mt-0.5 font-medium leading-tight">Layout moderno com comprovante de forma de pagamento, assinaturas duplas e dados simplificados.</span>
                       </button>
                     </div>
                   </div>
@@ -2528,15 +2676,15 @@ export default function App() {
 
                   {/* Submit / Trigger action */}
                   <div className="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
-                    {selectedTeacherId && selectedNucleusId && (receiptTemplate === "coordenador_secretario" || Number(receiptValueInput.replace(",", ".")) > 0) && (
+                    {selectedTeacherId && selectedNucleusId && (receiptTemplate === "coordenador_secretario" || receiptTemplate === "tesouraria" || Number(receiptValueInput.replace(",", ".")) > 0) && (
                       <button
                         type="button"
                         onClick={() => {
                           const teacher = teachers.find(t => t.id === selectedTeacherId)!;
                           const nucleus = nuclei.find(n => n.id === selectedNucleusId)!;
                           const isCoordenador = receiptTemplate === "coordenador_secretario";
-                          const valorNum = (isCoordenador || !receiptValueInput) ? 0 : Number(receiptValueInput.replace(",", "."));
-                          const valorExtensoStr = isCoordenador ? "" : receiptValueExtenso;
+                          const valorNum = (!receiptValueInput) ? 0 : Number(receiptValueInput.replace(",", "."));
+                          const valorExtensoStr = (isCoordenador || !receiptValueInput) ? "" : receiptValueExtenso;
                           const tempRecibo: Recibo = {
                             id: "draft",
                             idProfessor: teacher.id,
