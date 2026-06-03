@@ -23,7 +23,8 @@ import {
   RefreshCw, 
   FileText, 
   Check, 
-  Share2 
+  Share2,
+  FileSpreadsheet
 } from "lucide-react";
 import { Professor, Nucleo, ConfiguracoesEscola, Recibo } from "./types";
 import { 
@@ -814,6 +815,71 @@ export default function App() {
     }
   };
 
+  const downloadExcelTemplate = () => {
+    try {
+      const templateData = [
+        {
+          "Nome": "Maria Oliveira de Souza",
+          "Whatsapp": "(84) 99876-5432",
+          "CPF": "123.456.789-00",
+          "Data Aniversário (Dia/Mês)": "15/04",
+          "Endereço": "Rua das Flores, 123",
+          "Bairro": "Lagoa Nova",
+          "Cidade / UF": "Natal/RN",
+          "CEP": "59000-000",
+          "Congregação": "Sede",
+          "Nível de Formação": "Mestrado",
+          "Nome do Curso": "Teologia Sistemática",
+          "Instituição de Formação": "FATESTE",
+          "Ano Conclusão": "2022",
+          "Chave PIX": "12345678900",
+          "Banco": "Banco do Brasil",
+          "Tipo Conta": "Corrente",
+          "Operação": "",
+          "Agencia": "1234-5",
+          "Conta": "98765-4",
+          "E-mail": "maria.souza@esteadeb.org.br",
+          "Dados Bancários": "Ag: 1234-5 Conta: 98765-4 - BB",
+          "Observações": "Professora de Homilética e Hermenêutica."
+        },
+        {
+          "Nome": "João Silva Fernandes",
+          "Whatsapp": "(84) 99123-4567",
+          "CPF": "987.654.321-99",
+          "Data Aniversário (Dia/Mês)": "30/10",
+          "Endereço": "Av. Hermes da Fonseca, 456",
+          "Bairro": "Petrópolis",
+          "Cidade / UF": "Natal/RN",
+          "CEP": "59020-000",
+          "Congregação": "Templo Central",
+          "Nível de Formação": "Doutorado",
+          "Nome do Curso": "Divindade e História",
+          "Instituição de Formação": "ESTEADEB",
+          "Ano Conclusão": "2020",
+          "Chave PIX": "98765432199",
+          "Banco": "Caixa Econômica",
+          "Tipo Conta": "Poupança",
+          "Operação": "013",
+          "Agencia": "0560",
+          "Conta": "00012345-6",
+          "E-mail": "joao.fernandes@esteadeb.org.br",
+          "Dados Bancários": "Ag: 0560 Op: 013 Conta: 12345-6 - CEF",
+          "Observações": "Supervisor de Estudos Bíblicos."
+        }
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(templateData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Modelo_Docentes");
+
+      XLSX.writeFile(workbook, "ESTEADEB_Modelo_Importacao.xlsx");
+      triggerNotification("Modelo de planilha para importação baixado com sucesso!");
+    } catch (e) {
+      console.error(e);
+      triggerNotification("Erro ao gerar o modelo de planilha.", "error");
+    }
+  };
+
   const importTeachersFromExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -1536,6 +1602,15 @@ export default function App() {
                 >
                   <Upload className="w-4 h-4 text-admin-navy" />
                   <span>Importar Excel</span>
+                </button>
+
+                <button
+                  onClick={downloadExcelTemplate}
+                  className="bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs py-2.5 px-4 rounded-xl shadow-md flex items-center space-x-2 transition duration-150 cursor-pointer border border-amber-200"
+                  title="Baixar planilha modelo vazia/exemplo de importação"
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-amber-600" />
+                  <span>Baixar Modelo Excel</span>
                 </button>
 
                 <button
